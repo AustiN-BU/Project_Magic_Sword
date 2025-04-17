@@ -9,16 +9,26 @@ so it can work with the new player movement script
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ThirdPersonCam : MonoBehaviour
 {
     [Header("References")]
-    public Transform orientation;
-    public Transform player;
-    public Transform playerObj;
-    public Rigidbody rb;
+    [SerializeField] private Transform orientation;
+    [SerializeField] private Transform player;
+    [SerializeField] private Transform playerObj;
+    [SerializeField] private Rigidbody rb;
 
-    public float rotationSpeed;
+    [SerializeField] private PlayerInput playerInput;
+    private InputAction look;
+
+    [SerializeField] private float rotationSpeed;
+
+    private void Start()
+    {
+        look = playerInput.currentActionMap.FindAction("Look");
+        Cursor.visible = false;
+    }
 
     public void Update()
     {
@@ -27,11 +37,13 @@ public class ThirdPersonCam : MonoBehaviour
         orientation.forward = viewDir.normalized;
 
         //rotates the player object
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = look.ReadValue<Vector2>().x;
+        float verticalInput = look.ReadValue<Vector2>().y;
         Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if (inputDir != Vector3.zero)
-            playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
+        {
+            orientation.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
+        }
     }
 }

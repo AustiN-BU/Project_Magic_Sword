@@ -44,30 +44,39 @@ public class PauseMenu : MonoBehaviour
 
    public void Resume()
     {
-        PlayerController player = FindObjectOfType<PlayerController>();
-        player.GetComponent<CharacterController>().enabled = true;
+        PlayerMovement player = FindObjectOfType<PlayerMovement>();
+        player.GetComponent<PlayerInput>().enabled = true;
         CinemachineFreeLook camera = FindObjectOfType<CinemachineFreeLook>();
         camera.GetComponent<CinemachineFreeLook>().enabled = true;
         Boss boss = FindObjectOfType<Boss>();
-        boss.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        if (boss != null)
+        {
+            boss.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        }
         pauseMenuUI.SetActive(false);
         GameIsPaused = false;
+        Cursor.visible = false;
     }
 
     public void Pause()
     {
-        PlayerController player = FindObjectOfType<PlayerController>();
-        player.GetComponent<CharacterController>().enabled = false;
+        PlayerMovement player = FindObjectOfType<PlayerMovement>();
+        player.GetComponent<PlayerInput>().enabled = false;
         CinemachineFreeLook camera = FindObjectOfType<CinemachineFreeLook>();
         camera.GetComponent<CinemachineFreeLook>().enabled = false;
         Boss boss = FindObjectOfType<Boss>();
-        boss.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        if (boss != null)
+        {
+            boss.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        }
         pauseMenuUI.SetActive(true);
         GameIsPaused = true;
+        Cursor.visible = true;
     }
 
     public void Teammate()
     {
+        //linked to the Teammate Help option on the Pause Menu
         pauseMenuUI.SetActive(false);
         Debug.Log(message: "TeammateTalk");
         ConversationManager.Instance.StartConversation(teammateConvo);

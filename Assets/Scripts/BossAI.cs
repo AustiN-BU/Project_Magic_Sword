@@ -1,3 +1,10 @@
+/*****************************************************************************
+// File Name : BossAI.cs
+// Author : Austin Nelson
+// Creation Date : April 13, 2025
+//
+// Brief Description : This controls the boss' behavior and works with the NavMesh
+*****************************************************************************/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,8 +32,7 @@ public class BossAI : MonoBehaviour
         player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
 
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInAttackRange && playerInSightRange) AttackPlayer();
+
     }
 
     private void Update()
@@ -34,6 +40,9 @@ public class BossAI : MonoBehaviour
         //Checks for Sight and Attack Range
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, Player);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, Player);
+
+        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+        if (playerInAttackRange && playerInSightRange) AttackPlayer();
     }
    
     private void ChasePlayer()
@@ -46,6 +55,7 @@ public class BossAI : MonoBehaviour
         agent.SetDestination(transform.position);
 
         transform.LookAt(player);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
         if (!alreadyAttacked)
         {

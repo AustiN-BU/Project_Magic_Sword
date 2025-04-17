@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
-    bool readyToJump;
+
 
     [Header("Check Ground")]
     public float playerHeight;
@@ -35,10 +36,39 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
 
+    [Header("Health")]
+    [SerializeField] private int healAmount;
+
+    //new input
+    private PlayerInput playerInput;
+    private InputAction jump;
+    private InputAction move;
+    private InputAction heal;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        playerInput = GetComponent<PlayerInput>();
+        jump = playerInput.currentActionMap.FindAction("Jump");
+        move = playerInput.currentActionMap.FindAction("Move");
+        heal = playerInput.currentActionMap.FindAction("Heal");
+        jump.started += Jump_started;
+        heal.started += Heal_started;
+    }
+
+    private void Heal_started(InputAction.CallbackContext obj)
+    {
+        GetComponentInChildren<Health>().Heal(healAmount);
+    }
+
+    private void Jump_started(InputAction.CallbackContext obj)
+    {
+        if (grounded)
+        {
+         Jump();
+        }
+ 
     }
 
     private void Update()
@@ -52,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
         if (grounded)
             rb.drag = groundDrag;
         else
-            rb.drag = 0;
+            rb.drag = 1;
         
         SpeedControl();
     }
@@ -66,16 +96,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+
+        horizontalInput = move.ReadValue<Vector2>().x;
+        verticalInput = move.ReadValue<Vector2>().y;
+       
     }
 
     private void MovePlayer()
     {
         //calculates movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDirection.y = 0;
 
+        //on the ground
+        if(grounded)
         rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+
+        //in the air
+        else if(!grounded)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+        transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * 10f);
     }
 
     private void SpeedControl()
@@ -99,9 +140,5 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
 
-    private void ResetJump()
-    {
-        readyToJump = true;
-    }
 
 }
