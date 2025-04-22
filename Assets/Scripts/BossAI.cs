@@ -27,10 +27,13 @@ public class BossAI : MonoBehaviour
 
     public bool playerInSightRange, playerInAttackRange;
 
+    public Animator bossAnim;
+
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
+        bossAnim = GetComponent<Animator>();
 
 
     }
@@ -59,8 +62,9 @@ public class BossAI : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-            print("Attacked");
+
             //The attack Code goes here
+            bossAnim.Play("BossAttack");
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }

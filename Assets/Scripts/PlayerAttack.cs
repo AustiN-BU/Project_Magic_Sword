@@ -27,12 +27,21 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     private AttackArea _attackArea;
 
+    private Animator playerAnimator;
+
+    private void Start()
+    {
+        playerAnimator = GetComponent<Animator>();
+    }
+
     //Controls what happens with Horizontal Attacks
     public void OnHorizontalAttack(InputValue value)
     {
         if (_isAttacking) return;
         Debug.Log(message: "HorizontalAttack");
         StartCoroutine(routine: Hit(false));
+        //animation
+        playerAnimator.Play("HorizontalAttack");
     }
 
     //Controls what happens with Vertical Attacks
@@ -41,6 +50,9 @@ public class PlayerAttack : MonoBehaviour
         if (_isAttacking) return;
         Debug.Log(message: "VerticalAttack");
         StartCoroutine(routine: Hit(true));
+        //animation
+        playerAnimator.Play("VerticalAttack");
+
     }
 
     //Controls Cooldown
