@@ -16,4 +16,10 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("ForestArea1");
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+        print("Game Closed.");
+    }
 }

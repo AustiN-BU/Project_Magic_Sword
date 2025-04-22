@@ -59,6 +59,7 @@ public class BossAI : MonoBehaviour
 
         if (!alreadyAttacked)
         {
+            print("Attacked");
             //The attack Code goes here
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);

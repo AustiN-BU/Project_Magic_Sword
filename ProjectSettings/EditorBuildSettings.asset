@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ForestArea1.unity
     guid: 84a7de3baf88e5f40812cf5f0a81ab47
+  - enabled: 1
+    path: Assets/Scenes/BadlandsArea2.unity
+    guid: cea30e80691191346abb35eebb7e9d90
+  - enabled: 1
+    path: Assets/Scenes/SunsetHeightsArea3.unity
+    guid: 317ffc5dff724314bb6191e481253abb
   m_configObjects: {}
