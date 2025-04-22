@@ -2050,7 +2050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 8096872244486178487}
-  teammateConvo: {fileID: 0}
+  teammateConvo: {fileID: 360048274369770621}
 --- !u!65 &2373564471161511141
 BoxCollider:
   m_ObjectHideFlags: 0
